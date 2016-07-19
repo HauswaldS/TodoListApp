@@ -1,0 +1,21 @@
+<div class="col-xs-12">
+    <nav class="navbar navbar-inverse">
+        <div class="nav navbar-nav">
+            <a class="nav-item nav-link" (click)='logout()'>Logout</a>
+        </div>
+    </nav>
+</div>
+<div *ngIf="user"class="col-xs-4">
+    <h1>Welcome {{user.name}}</h1>
+    <hr>
+</div>
+<div class="col-xs-8">
+    <!-- <form  #form="ngForm" (submit)="add(form.value)">
+      <label for="title">Title</label>
+      <input type="text" ngControl="title" name="title">
+      <button class="btn btn-default" type="submit" >Add</button>
+    </form>
+    <div *ngFor="let dossier of dossiers">
+    <h1>{{dossier.title}}</h1>
+      </div> -->
+</div>

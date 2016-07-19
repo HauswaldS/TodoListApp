@@ -1,0 +1,65 @@
+/*colorIndex : https://color.adobe.com/fr/Google-color-theme-7244867/edit/?copy=true*/
+
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: #F3F3F3;
+    /*color:#F3F3F3;*/
+    color: black;
+    width: 100%;
+}
+
+
+/*Login*/
+
+#login {
+    width: 100%;
+    background-color: #458FF5;
+    color: #F3F3F3;
+    text-align: center;
+}
+
+#login form {
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+#login form div {
+    max-width: 50%;
+    margin: 0 auto;
+    padding: 1rem 0;
+}
+
+#login form input {
+    border-radius: 0;
+    border:0;
+}
+
+#login form button {
+    border-radius: 0;
+    margin:0 auto;
+    background-color: #458FF5;
+    border: 1px solid #F3F3F3;
+    color: #F3F3F3;
+}
+
+#login form .ng-valid {
+
+border-left:10px solid #34A853;
+
+}
+
+#login form .ng-invalid {
+    border-left:10px solid  #EE4335;
+
+}
+
+#login form .formHelper {
+    background-color:#EE4335;
+    color: #F3F3F3;
+    width:100%;
+    padding:.5rem 0;
+    font-style:bold;
+}
