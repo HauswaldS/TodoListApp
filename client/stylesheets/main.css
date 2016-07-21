@@ -63,3 +63,7 @@ border-left:10px solid #34A853;
     padding:.5rem 0;
     font-style:bold;
 }
+
+profilDetailComponent {
+    text-align:center;
+}
