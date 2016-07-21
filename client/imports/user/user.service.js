@@ -15,11 +15,9 @@ var UserService = (function () {
         this.users = users_ts_1.Users;
     }
     UserService.prototype.getUser = function (userId) {
-        var user = this.users.findOne(userId);
-        localStorage.setItem('User', JSON.stringify(user));
+        return this.users.findOne(userId);
     };
     UserService.prototype.updateUserDossiers = function (dossiers, userId) {
-        console.log(dossiers);
         this.users.update({ _id: userId }, {
             $set: { dossiers: dossiers }
         });

@@ -10,16 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var taches_ts_1 = require('../../../collections/taches.ts');
+var dossier_service_ts_1 = require('../dossier/dossier.service.ts');
 var TacheService = (function () {
-    function TacheService() {
+    function TacheService(dossierService) {
+        this.dossierService = dossierService;
         this.taches = taches_ts_1.Taches;
     }
-    TacheService.prototype.addTache = function (tache) {
-        this.taches.insert(tache);
+    TacheService.prototype.addTache = function (tache, ownerId) {
+        this.taches.insert({
+            description: tache,
+            dossierId: ownerId
+        });
+        var dossierTaches = this.findDossierTaches(ownerId);
+        this.dossierService.updateDossierTaches(dossierTaches, ownerId);
+    };
+    TacheService.prototype.findDossierTaches = function (ownerId) {
+        return this.taches.find({ dossierId: ownerId }).fetch();
     };
     TacheService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [dossier_service_ts_1.DossierService])
     ], TacheService);
     return TacheService;
 }());

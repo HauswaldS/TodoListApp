@@ -9,21 +9,25 @@ import { TacheDetailComponent } from '../tache/tacheDetail.component.ts';
 import { TacheService} from '../tache/tache.service.ts';
 import { DossierDetailComponent }  from '../dossier/dossierDetail.component.ts';
 import { DossierService } from '../dossier/dossier.service.ts';
+import { ProfilDetailComponent } from '../profile/profilDetail.component.ts';
 
 import template from './dashboard.component.html';
 
 @Component({
     selector: 'dashboard',
     template,
-    directives: [TacheDetailComponent, DossierDetailComponent],
+    directives: [TacheDetailComponent, DossierDetailComponent, ProfilDetailComponent],
     providers: [AuthentificationService, TacheService, DossierService, UserService]
 })
 export class DashboardComponent implements OnInit {
 
     userId: string;
     user: User;
-    dossier: Array<Dossier>;
-    dossierList: Array<string>;
+    userDossiers: Array<Dossier>;
+    userMainDossierId: string;
+    tacheDetail: boolean;
+    dossierDetail: boolean;
+    profilDetail:boolean;
 
     constructor(
         private authService: AuthentificationService,
@@ -34,27 +38,51 @@ export class DashboardComponent implements OnInit {
         private ngZone: NgZone
     ) {
         this.userId = localStorage.getItem('token');
+        this.tacheDetail = false;
+        this.dossierDetail = false;
+        this.profilDetail = true;
     }
 
     ngOnInit() {
-        if (localStorage.getItem('token') === null) {
-            this.router.navigate(['/login']);
+        this.user = this.userService.getUser(this.userId);
+        if (this.user === undefined){
+            this.authService.logout();
         }
-        else {
-            if (localStorage.getItem('User') === null) {
-                 this.userService.getUser(this.userId);
-                 this.user = JSON.parse(localStorage.getItem('User'))
-            }
-            else {
-                console.log(localStorage.getItem('User'));
-                this.user = JSON.parse(localStorage.getItem('User'))
-            }
-            if (this.user !== undefined) {
-                this.user.dossiers = this.dossierService.getUserDossier(this.userId);
-                console.log(this.user.dossiers);
-                }
-            }
+        else{
+            this.userDossiers = this.dossierService.getUserDossierOnInit(this.userId);
+            this.userMainDossierId = this.userDossiers[0]._id;
         }
+    }
+
+    quickTache(tache){
+        if(tache !== ''){
+            this.tacheService.addTache(tache, this.userMainDossierId);
+            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
+            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+        }
+    }
+
+    createDossier(title:string, description:string){
+        if(title !== '' && description !== '')
+        {
+            this.dossierService.addDossier(title, description, this.userId);
+            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
+            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+        }
+    }
+
+    addTacheToDossier(tache, dossierId){
+        if(tache !== ''){
+            this.tacheService.addTache(tache, dossierId);
+            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
+            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+        }
+    }
+
+    dossierToggle(dossier){
+        this.dossierService.updateDossierStatus(dossier._id, !dossier.status)
+        return dossier.status = !dossier.status;
+    }
 
     logout() {
         this.authService.logout();

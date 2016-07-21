@@ -12,12 +12,10 @@ export class UserService {
   }
 
   getUser(userId){
-    let user = this.users.findOne(userId);
-    localStorage.setItem('User', JSON.stringify(user));
+    return this.users.findOne(userId);
   }
 
   updateUserDossiers(dossiers, userId){
-    console.log(dossiers);
     this.users.update({_id:userId},
     {
       $set: {dossiers: dossiers}

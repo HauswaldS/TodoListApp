@@ -15,21 +15,39 @@ export class DossierService {
         this.dossiers = Dossiers;
     }
 
-    addDossier(dossier) {
-        Dossiers.insert(dossier);
-    }
-    getUserDossier(userId) {
+    getUserDossierOnInit(userId) {
         this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
         if (this.userDossiers.length === 0) {
-            this.dossierInit(userId);
-            this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
-
+            Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId, 'status':false });            this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
+            this.userService.updateUserDossiers(this.userDossiers, userId);
         }
-        this.userService.updateUserDossiers(this.userDossiers, userId);
         return this.userDossiers;
     }
-    dossierInit(userId) {
-        Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId });
+
+    updateDossierTaches(tachesToAdd, dossierId) {
+        this.dossiers.update(
+            {_id: dossierId},
+            {
+                $set:{ taches: tachesToAdd}
+            }
+        )
+    }
+
+    updateUserDossiers(userId){
+        return this.dossiers.find({ownerId: userId}).fetch();
+    }
+
+    addDossier(title:string, description:string, userId:string){
+        this.dossiers.insert({'title': title, 'description': description, ownerId: userId, 'status':false});
+    }
+
+    updateDossierStatus(dossierId, dossierStatus){
+        this.dossiers.update(
+            {_id: dossierId},
+            {
+                $set:{ status: dossierStatus}
+            }
+        )
     }
 
 }

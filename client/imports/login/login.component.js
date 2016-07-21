@@ -27,6 +27,7 @@ var LoginComponent = (function () {
     }
     LoginComponent.prototype.ngOnInit = function () {
         if (localStorage.getItem('token') !== null) {
+            console.log("GoToDashboard");
             this.router.navigate(['/dashboard']);
         }
     };

@@ -16,20 +16,30 @@ var DossierService = (function () {
         this.userService = userService;
         this.dossiers = dossiers_ts_1.Dossiers;
     }
-    DossierService.prototype.addDossier = function (dossier) {
-        dossiers_ts_1.Dossiers.insert(dossier);
-    };
-    DossierService.prototype.getUserDossier = function (userId) {
+    DossierService.prototype.getUserDossierOnInit = function (userId) {
         this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
         if (this.userDossiers.length === 0) {
-            this.dossierInit(userId);
+            dossiers_ts_1.Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId, 'status': false });
             this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
+            this.userService.updateUserDossiers(this.userDossiers, userId);
         }
-        this.userService.updateUserDossiers(this.userDossiers, userId);
         return this.userDossiers;
     };
-    DossierService.prototype.dossierInit = function (userId) {
-        dossiers_ts_1.Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId });
+    DossierService.prototype.updateDossierTaches = function (tachesToAdd, dossierId) {
+        this.dossiers.update({ _id: dossierId }, {
+            $set: { taches: tachesToAdd }
+        });
+    };
+    DossierService.prototype.updateUserDossiers = function (userId) {
+        return this.dossiers.find({ ownerId: userId }).fetch();
+    };
+    DossierService.prototype.addDossier = function (title, description, userId) {
+        this.dossiers.insert({ 'title': title, 'description': description, ownerId: userId, 'status': false });
+    };
+    DossierService.prototype.updateDossierStatus = function (dossierId, dossierStatus) {
+        this.dossiers.update({ _id: dossierId }, {
+            $set: { status: dossierStatus }
+        });
     };
     DossierService = __decorate([
         core_1.Injectable(), 

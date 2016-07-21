@@ -5,17 +5,82 @@
         </div>
     </nav>
 </div>
-<div *ngIf="user"class="col-xs-4">
+<div *ngIf="user" class="col-xs-4">
     <h1>Welcome {{user.name}}</h1>
     <hr>
+    <profilDetailComponent></profilDetailComponent>
 </div>
 <div class="col-xs-8">
-    <!-- <form  #form="ngForm" (submit)="add(form.value)">
-      <label for="title">Title</label>
-      <input type="text" ngControl="title" name="title">
-      <button class="btn btn-default" type="submit" >Add</button>
-    </form>
-    <div *ngFor="let dossier of dossiers">
-    <h1>{{dossier.title}}</h1>
-      </div> -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#createDossier">Add Dossier</button>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#quickTache">Add Tache</button>
+    <ul *ngIf='userDossiers'>
+        <li *ngFor='let dossier of userDossiers'>
+            {{dossier.title}}
+            <input #tacheToDossier type="text">
+            <button type="button" (click)="addTacheToDossier(tacheToDossier.value,dossier._id)" > Addtache</button>
+            <button type="button" name="onOff" (click)="dossierToggle(dossier)">Toggle</button>
+            <ul *ngIf="dossier.taches && dossier.status">
+                <li *ngFor='let tache of dossier.taches'>
+                    {{tache.description}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+
+
+
+<!-- Modal -->
+<div id="quickTache" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Ajouter un tache</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input  name="description" class="form-control" #tacheDescription></input>
+            <button type="button" name="button" (click)="quickTache(tacheDescription.value)" data-dismiss="modal">Submit</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="createDossier" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Ajouter un tache</h4>
+      </div>
+      <div class="modal-body">
+        <form #form="ngForm">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input  name="title" class="form-control" #DossierTitle></input>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input  name="description" class="form-control" #DossierDescription></input>
+          </div>
+          <button type="button" name="button" (click)="createDossier(DossierTitle.value, DossierDescription.value)" data-dismiss="modal">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
 </div>
