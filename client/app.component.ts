@@ -6,6 +6,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { LoginComponent } from './imports/login/login.component.ts';
 import { DashboardComponent } from './imports/dashboard/dashboard.component.ts';
 
+
 import template from './app.component.html';
 
 
@@ -15,14 +16,12 @@ import template from './app.component.html';
   directives:[ROUTER_DIRECTIVES]
 })
 export class AppComponent {
-  
 
-  constructor() { 
+
+  constructor() {
 
   }
 }
-
-
 //Router Logic
 
 const routes:RouterConfig = [

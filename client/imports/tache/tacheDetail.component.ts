@@ -19,8 +19,4 @@ constructor(
   this.taches = Taches.find();
 }
 
-  add(tache){
-    this.tacheService.addTache(tache);
-  }
-
 }

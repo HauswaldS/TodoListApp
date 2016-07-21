@@ -28,4 +28,11 @@ export class TacheService {
     return this.taches.find({dossierId: ownerId}).fetch();
   }
 
+  deleteDossierTaches(id){
+    let taches = this.taches.find({dossierId:id}).fetch();
+    for(let tache of taches){
+      this.taches.remove({'_id':tache._id});
+    }
+  }
+
 }

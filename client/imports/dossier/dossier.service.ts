@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TacheService } from '../tache/tache.service.ts';
 import { Dossiers } from '../../../collections/dossiers.ts';
 import { UserService } from '../user/user.service.ts';
 import { Mongo } from 'meteor/mongo';
@@ -11,6 +12,7 @@ export class DossierService {
 
     constructor(
         private userService: UserService
+
     ) {
         this.dossiers = Dossiers;
     }
@@ -48,6 +50,10 @@ export class DossierService {
                 $set:{ status: dossierStatus}
             }
         )
+    }
+
+    deleteUserDossier(dossierId:string){
+        this.dossiers.remove({_id:dossierId});
     }
 
 }

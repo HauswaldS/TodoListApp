@@ -27,6 +27,13 @@ var TacheService = (function () {
     TacheService.prototype.findDossierTaches = function (ownerId) {
         return this.taches.find({ dossierId: ownerId }).fetch();
     };
+    TacheService.prototype.deleteDossierTaches = function (id) {
+        var taches = this.taches.find({ dossierId: id }).fetch();
+        for (var _i = 0, taches_1 = taches; _i < taches_1.length; _i++) {
+            var tache = taches_1[_i];
+            this.taches.remove({ '_id': tache._id });
+        }
+    };
     TacheService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [dossier_service_ts_1.DossierService])

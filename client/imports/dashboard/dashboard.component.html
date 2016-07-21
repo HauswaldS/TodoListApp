@@ -19,6 +19,7 @@
             <input #tacheToDossier type="text">
             <button type="button" (click)="addTacheToDossier(tacheToDossier.value,dossier._id)" > Addtache</button>
             <button type="button" name="onOff" (click)="dossierToggle(dossier)">Toggle</button>
+            <button type="button" name="button" (click)="deleteUserDossier(dossier._id)">X</button>
             <ul *ngIf="dossier.taches && dossier.status">
                 <li *ngFor='let tache of dossier.taches'>
                     {{tache.description}}

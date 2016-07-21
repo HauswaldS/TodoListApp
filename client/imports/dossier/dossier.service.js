@@ -41,6 +41,9 @@ var DossierService = (function () {
             $set: { status: dossierStatus }
         });
     };
+    DossierService.prototype.deleteUserDossier = function (dossierId) {
+        this.dossiers.remove({ _id: dossierId });
+    };
     DossierService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [user_service_ts_1.UserService])

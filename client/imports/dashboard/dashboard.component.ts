@@ -88,6 +88,13 @@ export class DashboardComponent implements OnInit {
         this.authService.logout();
     }
 
+    deleteUserDossier(dossierId){
+        this.dossierService.deleteUserDossier(dossierId);
+        this.tacheService.deleteDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
+        this.userService.updateUserDossiers(this.userDossiers, this.userId);
+    }
+
 
 
 

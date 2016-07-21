@@ -69,6 +69,12 @@ var DashboardComponent = (function () {
     DashboardComponent.prototype.logout = function () {
         this.authService.logout();
     };
+    DashboardComponent.prototype.deleteUserDossier = function (dossierId) {
+        this.dossierService.deleteUserDossier(dossierId);
+        this.tacheService.deleteDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
+        this.userService.updateUserDossiers(this.userDossiers, this.userId);
+    };
     DashboardComponent = __decorate([
         core_1.Component({
             selector: 'dashboard',

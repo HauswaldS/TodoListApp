@@ -17,9 +17,6 @@ var TacheDetailComponent = (function () {
         this.tacheService = tacheService;
         this.taches = taches_ts_1.Taches.find();
     }
-    TacheDetailComponent.prototype.add = function (tache) {
-        this.tacheService.addTache(tache);
-    };
     TacheDetailComponent = __decorate([
         core_1.Component({
             selector: 'tacheDetailComponent',
