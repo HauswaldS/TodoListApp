@@ -18,6 +18,9 @@ var app_component_html_1 = require('./app.component.html');
 var AppComponent = (function () {
     function AppComponent() {
     }
+    AppComponent.prototype.ngOnInit = function () {
+        DocHead.addMeta({ name: 'viewport', content: 'width=device-width, initial-scale=1.0, shrink-to-fit=no' });
+    };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'appComponent',

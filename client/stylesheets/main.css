@@ -5,12 +5,124 @@ html {
 }
 
 body {
-    background-color: #F3F3F3;
+    background-color: #458FF5;
     /*color:#F3F3F3;*/
     color: black;
     width: 100%;
 }
 
+.container-fluid {
+    margin:0;
+}
+
+#dossierDisplay, #switchDiv{
+    margin:0;
+    padding:0;
+}
+
+
+/*switchDiv*/
+
+#switchDiv {
+    background-color:#458FF5;
+    border-right:1px solid  #F3F3F3;
+    min-height: 500px;
+}
+
+
+/*UserInfo*/
+
+ #switchDiv>div {
+     border-bottom:1px solid #F3F3F3;
+     margin-bottom:1rem;
+ }
+
+#switchDiv #userInfo img {
+    max-width:150px;
+}
+
+#switchDiv #userInfo h4 {
+    color:#F3F3F3;
+}
+
+#switchDiv #userMenu > div {
+    padding:10% 10%;
+}
+
+#switchDiv #userMenu > div button {
+    margin: .5rem 0;
+    border-radius:0;
+    background-color:#F3F3F3;
+    border:border:1px solid #F3F3F3;
+    color:#458FF5;
+}
+#switchDiv #userMenu > div button:hover {
+    background-color:#458FF5;
+    border:1px solid #F3F3F3;
+    color:#F3F3F3;
+}
+
+/*dossierDisplay*/
+
+#dossierDisplay nav {
+    border-radius:0;
+    background-color:#458FF5;
+    border:0;
+    border-bottom:1px solid #F3F3F3;
+    margin-bottom:0;
+}
+
+#dossierDisplay nav > div > p {
+    color:#F3F3F3;
+    font-size:1.2rem;
+}
+
+#dossierDisplay> nav> div> ul>li>a {
+    color: #458FF5;
+    background-color:#F3F3F3;
+    font-size:1.3rem;
+    border:border:1px solid #458FF5;
+
+}
+#dossierDisplay> nav> div> ul>li>a:hover {
+    cursor:pointer;
+    color: #F3F3F3;
+    background-color:#458FF5;
+    border:border:1px solid #F3F3F3;
+}
+
+.addTacheToDossier {
+    float:right;
+}
+
+.addTacheToDossier button {
+    color: white;
+    background-color:#458FF5!important;
+    border:0;
+    height:26px:
+}
+.addTacheToDossier button:hover {
+    color: #458FF5;
+    background-color:white!important;;
+}
+
+/*dashboardDossiers*/
+
+#dashboardDossiers #openDossier {
+
+}
+
+ #logout {
+    background-color:#EE4335;
+    color:#F3F3F3;
+}
+
+/*dashboardDossiers*/
+
+#dashboardDossiers {
+    background-color:#F3F3F3;
+    min-height:500px;
+}
 
 /*Login*/
 

@@ -1,4 +1,4 @@
-import { Component, provide } from '@angular/core';
+import { Component, provide, OnInit } from '@angular/core';
 import { bootstrap } from 'angular2-meteor-auto-bootstrap';
 import {Mongo} from 'meteor/mongo';
 import {RouterConfig, provideRouter, ROUTER_DIRECTIVES} from '@angular/router';
@@ -15,13 +15,18 @@ import template from './app.component.html';
   template,
   directives:[ROUTER_DIRECTIVES]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
 
   constructor() {
 
   }
+  ngOnInit(){
+    DocHead.addMeta({name:'viewport', content:'width=device-width, initial-scale=1.0, shrink-to-fit=no'});
+  }
 }
+
+
 //Router Logic
 
 const routes:RouterConfig = [

@@ -30,7 +30,6 @@
     "client/imports/dossier/dossier.service.ts",
     "client/imports/dossier/dossierDetail.component.ts",
     "client/imports/login/login.component.ts",
-    "client/imports/profile/profil.component.ts",
     "client/imports/profile/profilDetail.component.ts",
     "client/imports/profile/profilDetail.service.ts",
     "client/imports/tache/tache.service.ts",
