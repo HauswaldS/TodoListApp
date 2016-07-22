@@ -26,7 +26,8 @@ export class DossierService {
         return this.userDossiers;
     }
 
-    updateDossierTaches(tachesToAdd, dossierId) {
+    //Ajoute/update les taches d'un dossier dans la db 'dossier'
+    addTachesToDossier(tachesToAdd, dossierId) {
         this.dossiers.update(
             {_id: dossierId},
             {
@@ -35,14 +36,19 @@ export class DossierService {
         )
     }
 
-    updateUserDossiers(userId){
-        return this.dossiers.find({ownerId: userId}).fetch();
+    //Get tous les dossiers d'un utilisateur dans la db 'dossier'
+    updateDossiers(userId){
+        let userDossiers = this.dossiers.find({ownerId: userId}).fetch();
+        this.userService.updateUserDossiers(userDossiers, userId);
+        return userDossiers;
     }
 
+    //Ajoute un dossier à la db 'dossier'
     addDossier(title:string, description:string, userId:string){
         this.dossiers.insert({'title': title, 'description': description, ownerId: userId, 'status':false});
     }
 
+    //Met à la jour le status des dossier (flase:off, true:on);
     updateDossierStatus(dossierId, dossierStatus){
         this.dossiers.update(
             {_id: dossierId},

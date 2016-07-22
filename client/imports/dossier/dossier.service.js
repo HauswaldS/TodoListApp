@@ -25,17 +25,23 @@ var DossierService = (function () {
         }
         return this.userDossiers;
     };
-    DossierService.prototype.updateDossierTaches = function (tachesToAdd, dossierId) {
+    //Ajoute/update les taches d'un dossier dans la db 'dossier'
+    DossierService.prototype.addTachesToDossier = function (tachesToAdd, dossierId) {
         this.dossiers.update({ _id: dossierId }, {
             $set: { taches: tachesToAdd }
         });
     };
-    DossierService.prototype.updateUserDossiers = function (userId) {
-        return this.dossiers.find({ ownerId: userId }).fetch();
+    //Get tous les dossiers d'un utilisateur dans la db 'dossier'
+    DossierService.prototype.updateDossiers = function (userId) {
+        var userDossiers = this.dossiers.find({ ownerId: userId }).fetch();
+        this.userService.updateUserDossiers(userDossiers, userId);
+        return userDossiers;
     };
+    //Ajoute un dossier à la db 'dossier'
     DossierService.prototype.addDossier = function (title, description, userId) {
         this.dossiers.insert({ 'title': title, 'description': description, ownerId: userId, 'status': false });
     };
+    //Met à la jour le status des dossier (flase:off, true:on);
     DossierService.prototype.updateDossierStatus = function (dossierId, dossierStatus) {
         this.dossiers.update({ _id: dossierId }, {
             $set: { status: dossierStatus }

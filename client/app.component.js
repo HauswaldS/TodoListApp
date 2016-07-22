@@ -14,6 +14,7 @@ var router_1 = require('@angular/router');
 var common_1 = require('@angular/common');
 var login_component_ts_1 = require('./imports/login/login.component.ts');
 var dashboard_component_ts_1 = require('./imports/dashboard/dashboard.component.ts');
+var profilDetail_component_ts_1 = require('./imports/profile/profilDetail.component.ts');
 var app_component_html_1 = require('./app.component.html');
 var AppComponent = (function () {
     function AppComponent() {
@@ -45,7 +46,11 @@ var routes = [
     },
     {
         path: 'dashboard',
-        component: dashboard_component_ts_1.DashboardComponent
+        component: dashboard_component_ts_1.DashboardComponent,
+        children: [
+            { path: '', redirectTo: 'ProfilDetailComponent', pathMatch: 'full' },
+            { path: 'ProfilDetailComponent', component: profilDetail_component_ts_1.ProfilDetailComponent }
+        ]
     }
 ];
 var APP_ROUTER_PROVIDERS = [

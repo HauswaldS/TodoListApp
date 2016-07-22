@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
 import { AuthentificationService } from '../authentification/authentification.service.ts';
 import { Users } from '../../../collections/users.ts'
@@ -16,7 +16,7 @@ import template from './dashboard.component.html';
 @Component({
     selector: 'dashboard',
     template,
-    directives: [TacheDetailComponent, DossierDetailComponent, ProfilDetailComponent],
+    directives: [TacheDetailComponent, DossierDetailComponent, ProfilDetailComponent, ROUTER_DIRECTIVES],
     providers: [AuthentificationService, TacheService, DossierService, UserService]
 })
 export class DashboardComponent implements OnInit {
@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
     userMainDossierId: string;
     tacheDetail: boolean;
     dossierDetail: boolean;
-    profilDetail:boolean;
+    profilDetail: boolean;
 
     constructor(
         private authService: AuthentificationService,
@@ -45,41 +45,41 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.userService.getUser(this.userId);
-        if (this.user === undefined){
+        if (this.user === undefined) {
             this.authService.logout();
         }
-        else{
+        else {
             this.userDossiers = this.dossierService.getUserDossierOnInit(this.userId);
             this.userMainDossierId = this.userDossiers[0]._id;
         }
     }
 
-    quickTache(tache){
-        if(tache !== ''){
+    quickTache(tache) {
+        if (tache !== '') {
+            //Ajoute la tache à la base de données dans 'tache' et rajoute la tache au dossier correspondant (Boite de récéption)
             this.tacheService.addTache(tache, this.userMainDossierId);
-            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
-            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+            //Récupère les dossiers correspondant à l'utilisateur
+            this.userDossiers = this.dossierService.updateDossiers(this.userId);
         }
     }
 
-    createDossier(title:string, description:string){
-        if(title !== '' && description !== '')
-        {
+    createDossier(title: string, description: string) {
+        if (title !== '' && description !== '') {
+            //Ajoute le dossier à la db 'dossier'
             this.dossierService.addDossier(title, description, this.userId);
-            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
-            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+            //Récupère les dossiers correspondant à l'utilisateur et update
+            this.userDossiers = this.dossierService.updateDossiers(this.userId);
         }
     }
 
-    addTacheToDossier(tache, dossierId){
-        if(tache !== ''){
+    addTacheToDossier(tache, dossierId) {
+        if (tache !== '') {
             this.tacheService.addTache(tache, dossierId);
-            this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
-            this.userService.updateUserDossiers(this.userDossiers, this.userId);
+            this.userDossiers = this.dossierService.updateDossiers(this.userId);
         }
     }
 
-    dossierToggle(dossier){
+    dossierToggle(dossier) {
         this.dossierService.updateDossierStatus(dossier._id, !dossier.status)
         return dossier.status = !dossier.status;
     }
@@ -88,14 +88,10 @@ export class DashboardComponent implements OnInit {
         this.authService.logout();
     }
 
-    deleteUserDossier(dossierId){
+    deleteUserDossier(dossierId) {
         this.dossierService.deleteUserDossier(dossierId);
         this.tacheService.deleteDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateUserDossiers(this.userId);
-        this.userService.updateUserDossiers(this.userDossiers, this.userId);
+        this.userDossiers = this.dossierService.updateDossiers(this.userId);
     }
-
-
-
 
 }

@@ -16,14 +16,18 @@ var TacheService = (function () {
         this.dossierService = dossierService;
         this.taches = taches_ts_1.Taches;
     }
+    //Ajoute une tache à la db 'tache' et update le dossier correspondant dans la db 'dossier'
     TacheService.prototype.addTache = function (tache, ownerId) {
         this.taches.insert({
             description: tache,
             dossierId: ownerId
         });
+        //Collecte les taches correspondante au dossier après avoir ajouté la tache à la db 'tache'
         var dossierTaches = this.findDossierTaches(ownerId);
-        this.dossierService.updateDossierTaches(dossierTaches, ownerId);
+        //Met à jour le dossier correspondant dans la db 'dossier'
+        this.dossierService.addTachesToDossier(dossierTaches, ownerId);
     };
+    //Collecte les taches qui possède l'id d'un dossier spécifique
     TacheService.prototype.findDossierTaches = function (ownerId) {
         return this.taches.find({ dossierId: ownerId }).fetch();
     };
@@ -33,6 +37,9 @@ var TacheService = (function () {
             var tache = taches_1[_i];
             this.taches.remove({ '_id': tache._id });
         }
+    };
+    TacheService.prototype.deleteSingleTache = function (id) {
+        this.taches.remove({ '_id': id });
     };
     TacheService = __decorate([
         core_1.Injectable(), 

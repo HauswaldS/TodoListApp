@@ -15,6 +15,7 @@ export class UserService {
     return this.users.findOne(userId);
   }
 
+  //Met à jour les dossiers de l'utilisateur après modification des taches > dossiers dans la db
   updateUserDossiers(dossiers, userId){
     this.users.update({_id:userId},
     {

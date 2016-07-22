@@ -14,16 +14,19 @@ export class TacheService {
     this.taches = Taches;
   }
 
+//Ajoute une tache à la db 'tache' et update le dossier correspondant dans la db 'dossier'
   addTache(tache:string, ownerId){
     this.taches.insert({
       description:tache,
       dossierId: ownerId
     });
+    //Collecte les taches correspondante au dossier après avoir ajouté la tache à la db 'tache'
     let dossierTaches = this.findDossierTaches(ownerId);
-    this.dossierService.updateDossierTaches(dossierTaches, ownerId);
-
+    //Met à jour le dossier correspondant dans la db 'dossier'
+    this.dossierService.addTachesToDossier(dossierTaches, ownerId);
   }
 
+  //Collecte les taches qui possède l'id d'un dossier spécifique
   findDossierTaches(ownerId){
     return this.taches.find({dossierId: ownerId}).fetch();
   }
@@ -33,6 +36,10 @@ export class TacheService {
     for(let tache of taches){
       this.taches.remove({'_id':tache._id});
     }
+  }
+
+  deleteSingleTache(id){
+    this.taches.remove({'_id':id});
   }
 
 }

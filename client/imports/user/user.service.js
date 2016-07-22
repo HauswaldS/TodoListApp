@@ -17,6 +17,7 @@ var UserService = (function () {
     UserService.prototype.getUser = function (userId) {
         return this.users.findOne(userId);
     };
+    //Met à jour les dossiers de l'utilisateur après modification des taches > dossiers dans la db
     UserService.prototype.updateUserDossiers = function (dossiers, userId) {
         this.users.update({ _id: userId }, {
             $set: { dossiers: dossiers }

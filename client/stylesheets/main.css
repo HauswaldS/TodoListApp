@@ -179,3 +179,17 @@ border-left:10px solid #34A853;
 profilDetailComponent {
     text-align:center;
 }
+
+#deleteSingleTache {
+    float:right;
+}
+
+.c-input {
+    width:100%!important;
+}
+.c-input:hover {
+    cursor:pointer;
+}
+.c-input input {
+    float:right!important;
+}

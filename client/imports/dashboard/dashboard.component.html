@@ -1,4 +1,4 @@
-<div *ngIf="user" class="col-xs-4" id="switchDiv">
+<div [hidden]="!user" class="col-xs-4" id="switchDiv">
     <div class="row">
         <div id="userInfo" class="col-xs-6">
             <img class="card-img-top" src="{{user.pictureSrc}}" alt="Card image cap">
@@ -7,13 +7,13 @@
         <div id="userMenu" class="col-xs-6">
             <div class="input-group">
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#createDossier"><i class="fa fa-folder" aria-hidden="true"></i> New Dossier</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#quickTache"><i class="fa fa-plus-circle" aria-hidden="true" ></i> Quick Task</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#quickTache"><i class="fa fa-plus-circle" aria-hidden="true"></i> Quick Task</button>
             </div>
         </div>
     </div>
-    <profilDetailComponent></profilDetailComponent>
+    <router-outlet></router-outlet>
 </div>
-<div class="col-xs-8" id="dossierDisplay"  *ngIf="user">
+<div class="col-xs-8" id="dossierDisplay" *ngIf="user">
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
             <p class="navbar-brand" href="#">Welcome {{user.name}}</p>
@@ -28,18 +28,23 @@
         <ul *ngIf='userDossiers' class="list-group">
             <li *ngFor='let dossier of userDossiers' class="list-group-item">
                 {{dossier.title}}
-                <button id="openDossier"type="button" name="onOff" (click)="dossierToggle(dossier)"><i class="fa fa-arrow-down" aria-hidden="true"></i>Open</button>
-                <button type="button" name="button" (click)="deleteUserDossier(dossier._id)">X</button>
-                <span *ngIf="dossier.taches" class="label label-default label-pill pull-xs-right">{{(dossier.taches).length}}</span>
-                <div class="input-group addTacheToDossier">
-                    <input #tacheToDossier type="text">
-                    <button type="button"  (click)="addTacheToDossier(tacheToDossier.value,dossier._id)"><i class="fa fa-plus" aria-hidden="true"></i> Addtache</button>
+                <div class="addTacheToDossier input-group">
+                    <button *ngIf="dossier.status === false" id="openDossier" type="button" name="onOff" (click)="dossierToggle(dossier)"><i class="fa fa-arrow-down" aria-hidden="true"></i>Open</button>
+                    <button *ngIf="dossier.status === true" id="openDossier" type="button" name="onOff" (click)="dossierToggle(dossier)"><i class="fa fa-arrow-up" aria-hidden="true"></i>Close</button>
+                    <button *ngIf="dossier.title !== 'Boite de réception'" type="button" name="button" (click)="deleteUserDossier(dossier._id)">X</button>
                 </div>
-                <ul *ngIf="dossier.taches && dossier.status" class="list-group">
+                <span *ngIf="dossier.taches" class="label label-default label-pill pull-xs-right">{{(dossier.taches).length}}</span>
+                <ul *ngIf="dossier.status" class="list-group">
                     <li *ngFor='let tache of dossier.taches' class="list-group-item">
-                        {{tache.description}}
-                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <label class="c-input c-checkbox">
+                            <span class="c-indicator"></span> {{tache.description}}
+                            <input type="checkbox">
+                        </label>
                     </li>
+                    <div class="input-group">
+                        <input #tacheToDossier type="text">
+                        <button type="button" (click)="addTacheToDossier(tacheToDossier.value,dossier._id)"><i class="fa fa-plus" aria-hidden="true"></i> Addtache</button>
+                    </div>
                 </ul>
             </li>
         </ul>

@@ -5,49 +5,54 @@ import {RouterConfig, provideRouter, ROUTER_DIRECTIVES} from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { LoginComponent } from './imports/login/login.component.ts';
 import { DashboardComponent } from './imports/dashboard/dashboard.component.ts';
+import { ProfilDetailComponent} from './imports/profile/profilDetail.component.ts';
 
 
 import template from './app.component.html';
 
 
 @Component({
-  selector: 'appComponent',
-  template,
-  directives:[ROUTER_DIRECTIVES]
+    selector: 'appComponent',
+    template,
+    directives: [ROUTER_DIRECTIVES]
 })
 export class AppComponent implements OnInit {
 
 
-  constructor() {
+    constructor() {
 
-  }
-  ngOnInit(){
-    DocHead.addMeta({name:'viewport', content:'width=device-width, initial-scale=1.0, shrink-to-fit=no'});
-  }
+    }
+    ngOnInit() {
+        DocHead.addMeta({ name: 'viewport', content: 'width=device-width, initial-scale=1.0, shrink-to-fit=no' });
+    }
 }
 
 
 //Router Logic
 
-const routes:RouterConfig = [
-{
-    path:'',
-    redirectTo:'/login',
-    pathMatch:'full'
-},
-{
-    path:'login',
-    component: LoginComponent
-},
-{
-path:'dashboard',
-component: DashboardComponent
-}
+const routes: RouterConfig = [
+    {
+        path: '',
+        redirectTo: '/login',
+        pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: 'dashboard',
+        component: DashboardComponent,
+        children: [
+            { path: '', redirectTo: 'ProfilDetailComponent', pathMatch: 'full' },
+            { path:'ProfilDetailComponent', component: ProfilDetailComponent}
+        ]
+    }
 
 ]
 
 const APP_ROUTER_PROVIDERS = [
-  provideRouter(routes)
+    provideRouter(routes)
 ]
 
 //Boot Logic
