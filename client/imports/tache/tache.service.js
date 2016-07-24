@@ -20,19 +20,25 @@ var TacheService = (function () {
     TacheService.prototype.addTache = function (tache, ownerId) {
         this.taches.insert({
             description: tache,
+            status: false,
             dossierId: ownerId
         });
         //Collecte les taches correspondante au dossier après avoir ajouté la tache à la db 'tache'
         var dossierTaches = this.findDossierTaches(ownerId);
-        //Met à jour le dossier correspondant dans la db 'dossier'
+        // Met à jour le dossier correspondant dans la db 'dossier'
         this.dossierService.addTachesToDossier(dossierTaches, ownerId);
     };
     //Collecte les taches qui possède l'id d'un dossier spécifique
     TacheService.prototype.findDossierTaches = function (ownerId) {
         return this.taches.find({ dossierId: ownerId }).fetch();
     };
-    TacheService.prototype.deleteDossierTaches = function (id) {
-        var taches = this.taches.find({ dossierId: id }).fetch();
+    TacheService.prototype.updateDossierTaches = function (ownerId) {
+        var dossierTaches = this.findDossierTaches(ownerId);
+        this.dossierService.addTachesToDossier(dossierTaches, ownerId);
+        console.log(dossierTaches);
+    };
+    TacheService.prototype.deleteDossierTaches = function (ownerId) {
+        var taches = this.taches.find({ dossierId: ownerId }).fetch();
         for (var _i = 0, taches_1 = taches; _i < taches_1.length; _i++) {
             var tache = taches_1[_i];
             this.taches.remove({ '_id': tache._id });
@@ -40,6 +46,19 @@ var TacheService = (function () {
     };
     TacheService.prototype.deleteSingleTache = function (id) {
         this.taches.remove({ '_id': id });
+    };
+    TacheService.prototype.changeStatus = function (tacheId) {
+        var tacheStatus = this.taches.find({ _id: tacheId }).fetch()[0].status;
+        if (tacheStatus === true) {
+            this.taches.update({ _id: tacheId }, {
+                $set: { status: false }
+            });
+        }
+        else {
+            this.taches.update({ _id: tacheId }, {
+                $set: { status: true }
+            });
+        }
     };
     TacheService = __decorate([
         core_1.Injectable(), 

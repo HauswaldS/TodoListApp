@@ -1,5 +1,5 @@
-<div [hidden]="!user" class="col-xs-4" id="switchDiv">
-    <div class="row">
+<div class="col-xs-4" id="switchDiv">
+    <div class="row" *ngIf="user">
         <div id="userInfo" class="col-xs-6">
             <img class="card-img-top" src="{{user.pictureSrc}}" alt="Card image cap">
             <h4 class="card-title">{{user.pseudo}}</h4>
@@ -31,14 +31,23 @@
                 <div class="addTacheToDossier input-group">
                     <button *ngIf="dossier.status === false" id="openDossier" type="button" name="onOff" (click)="dossierToggle(dossier)"><i class="fa fa-arrow-down" aria-hidden="true"></i>Open</button>
                     <button *ngIf="dossier.status === true" id="openDossier" type="button" name="onOff" (click)="dossierToggle(dossier)"><i class="fa fa-arrow-up" aria-hidden="true"></i>Close</button>
-                    <button *ngIf="dossier.title !== 'Boite de réception'" type="button" name="button" (click)="deleteUserDossier(dossier._id)">X</button>
+                    <button *ngIf="dossier.title !== 'Boite de réception'" type="button" name="button" (click)="deleteDossier(dossier._id)">X</button>
                 </div>
                 <span *ngIf="dossier.taches" class="label label-default label-pill pull-xs-right">{{(dossier.taches).length}}</span>
                 <ul *ngIf="dossier.status" class="list-group">
-                    <li *ngFor='let tache of dossier.taches' class="list-group-item">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary" (click)="dossier.show ='done'">Done</button>
+                        <button type="button" class="btn btn-secondary" (click)="dossier.show ='all'">All</button>
+                        <button type="button" class="btn btn-secondary" (click)="dossier.show ='undone'">Undone</button>
+                    </div>
+                    <li *ngFor='let tache of dossier.taches' class="list-group-item" [hidden]="dossier.show === 'all'">
+                        <p>
+                            {{dossier.show}}
+                        </p>
                         <label class="c-input c-checkbox">
                             <span class="c-indicator"></span> {{tache.description}}
-                            <input type="checkbox">
+                            <input *ngIf="tache.status === false" type="checkbox" (click)="changeTacheStatus(tache._id, tache.dossierId)">
+                            <input *ngIf="tache.status === true" type="checkbox" (click)="changeTacheStatus(tache._id, tache.dossierId)" checked>
                         </label>
                     </li>
                     <div class="input-group">

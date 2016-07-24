@@ -19,7 +19,7 @@ var DossierService = (function () {
     DossierService.prototype.getUserDossierOnInit = function (userId) {
         this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
         if (this.userDossiers.length === 0) {
-            dossiers_ts_1.Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId, 'status': false });
+            dossiers_ts_1.Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", status: true, "ownerId": userId, "show": 'all' });
             this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
             this.userService.updateUserDossiers(this.userDossiers, userId);
         }
@@ -34,12 +34,15 @@ var DossierService = (function () {
     //Get tous les dossiers d'un utilisateur dans la db 'dossier'
     DossierService.prototype.updateDossiers = function (userId) {
         var userDossiers = this.dossiers.find({ ownerId: userId }).fetch();
-        this.userService.updateUserDossiers(userDossiers, userId);
+        // this.userService.updateUserDossiers(userDossiers, userId);
+        console.log("UpdateDossiers !");
         return userDossiers;
     };
     //Ajoute un dossier à la db 'dossier'
     DossierService.prototype.addDossier = function (title, description, userId) {
-        this.dossiers.insert({ 'title': title, 'description': description, ownerId: userId, 'status': false });
+        this.dossiers.insert({ 'title': title, 'description': description, 'ownerId': userId, 'status': true, 'show': 'all' });
+        var userDossiers = this.dossiers.find({ ownerId: userId }).fetch();
+        this.userService.updateUserDossiers(userDossiers, userId);
     };
     //Met à la jour le status des dossier (flase:off, true:on);
     DossierService.prototype.updateDossierStatus = function (dossierId, dossierStatus) {

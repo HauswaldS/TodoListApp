@@ -25,9 +25,8 @@ export class DashboardComponent implements OnInit {
     user: User;
     userDossiers: Array<Dossier>;
     userMainDossierId: string;
-    tacheDetail: boolean;
-    dossierDetail: boolean;
-    profilDetail: boolean;
+    userTest: Mongo.Cursor<User>;
+
 
     constructor(
         private authService: AuthentificationService,
@@ -38,9 +37,7 @@ export class DashboardComponent implements OnInit {
         private ngZone: NgZone
     ) {
         this.userId = localStorage.getItem('token');
-        this.tacheDetail = false;
-        this.dossierDetail = false;
-        this.profilDetail = true;
+        this.userTest = Users.find({ _id: this.userId });
     }
 
     ngOnInit() {
@@ -54,6 +51,44 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+
+    createDossier(title: string, description: string) {
+        this.userTest.observeChanges({
+            added: function(user) {
+                console.log("SOmething got updated :added");
+                this.userDossiers = user;
+            },
+            changed: function(user) {
+                console.log("SOmething got updated :changed");
+                this.userDossiers = user;
+            }
+        })
+        if (title !== '' && description !== '') {
+            //Ajoute le dossier à la db 'dossier'
+            this.dossierService.addDossier(title, description, this.userId);
+            //Récupère les dossiers correspondant à l'utilisateur et update
+        }
+    }
+
+    deleteDossier(dossierId) {
+        this.dossierService.deleteUserDossier(dossierId);
+        this.tacheService.deleteDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateDossiers(this.userId);
+    }
+
+    dossierToggle(dossier) {
+        this.dossierService.updateDossierStatus(dossier._id, !dossier.status)
+        return dossier.status = !dossier.status;
+    }
+
+    addTacheToDossier(tache, dossierId) {
+        if (tache !== '') {
+            this.tacheService.addTache(tache, dossierId);
+            this.userDossiers = this.dossierService.updateDossiers(this.userId);
+            console.log(this.userDossiers);
+        }
+    }
+
     quickTache(tache) {
         if (tache !== '') {
             //Ajoute la tache à la base de données dans 'tache' et rajoute la tache au dossier correspondant (Boite de récéption)
@@ -63,35 +98,17 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    createDossier(title: string, description: string) {
-        if (title !== '' && description !== '') {
-            //Ajoute le dossier à la db 'dossier'
-            this.dossierService.addDossier(title, description, this.userId);
-            //Récupère les dossiers correspondant à l'utilisateur et update
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
+    changeTacheStatus(tacheId, dossierId) {
+        this.tacheService.changeStatus(tacheId);
+        this.tacheService.updateDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateDossiers(this.userId);
     }
 
-    addTacheToDossier(tache, dossierId) {
-        if (tache !== '') {
-            this.tacheService.addTache(tache, dossierId);
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
-    }
-
-    dossierToggle(dossier) {
-        this.dossierService.updateDossierStatus(dossier._id, !dossier.status)
-        return dossier.status = !dossier.status;
-    }
 
     logout() {
         this.authService.logout();
     }
 
-    deleteUserDossier(dossierId) {
-        this.dossierService.deleteUserDossier(dossierId);
-        this.tacheService.deleteDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
-    }
+
 
 }

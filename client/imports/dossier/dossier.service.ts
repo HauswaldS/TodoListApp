@@ -20,7 +20,8 @@ export class DossierService {
     getUserDossierOnInit(userId) {
         this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
         if (this.userDossiers.length === 0) {
-            Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", "ownerId": userId, 'status':false });            this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
+            Dossiers.insert({ 'title': 'Boite de réception', 'description': "Default dossier", status: true, "ownerId": userId, "show" :'all' });
+            this.userDossiers = this.dossiers.find({ "ownerId": userId }).fetch();
             this.userService.updateUserDossiers(this.userDossiers, userId);
         }
         return this.userDossiers;
@@ -39,13 +40,16 @@ export class DossierService {
     //Get tous les dossiers d'un utilisateur dans la db 'dossier'
     updateDossiers(userId){
         let userDossiers = this.dossiers.find({ownerId: userId}).fetch();
-        this.userService.updateUserDossiers(userDossiers, userId);
+        // this.userService.updateUserDossiers(userDossiers, userId);
+        console.log("UpdateDossiers !");
         return userDossiers;
     }
 
     //Ajoute un dossier à la db 'dossier'
     addDossier(title:string, description:string, userId:string){
-        this.dossiers.insert({'title': title, 'description': description, ownerId: userId, 'status':false});
+        this.dossiers.insert({'title': title, 'description': description, 'ownerId': userId, 'status':true, 'show':'all'});
+        let userDossiers = this.dossiers.find({ownerId: userId}).fetch();
+        this.userService.updateUserDossiers(userDossiers, userId);
     }
 
     //Met à la jour le status des dossier (flase:off, true:on);

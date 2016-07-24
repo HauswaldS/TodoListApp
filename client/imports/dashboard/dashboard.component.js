@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var authentification_service_ts_1 = require('../authentification/authentification.service.ts');
+var users_ts_1 = require('../../../collections/users.ts');
 var user_service_ts_1 = require('../user/user.service.ts');
 var tacheDetail_component_ts_1 = require('../tache/tacheDetail.component.ts');
 var tache_service_ts_1 = require('../tache/tache.service.ts');
@@ -27,9 +28,7 @@ var DashboardComponent = (function () {
         this.router = router;
         this.ngZone = ngZone;
         this.userId = localStorage.getItem('token');
-        this.tacheDetail = false;
-        this.dossierDetail = false;
-        this.profilDetail = true;
+        this.userTest = users_ts_1.Users.find({ _id: this.userId });
     }
     DashboardComponent.prototype.ngOnInit = function () {
         this.user = this.userService.getUser(this.userId);
@@ -41,6 +40,38 @@ var DashboardComponent = (function () {
             this.userMainDossierId = this.userDossiers[0]._id;
         }
     };
+    DashboardComponent.prototype.createDossier = function (title, description) {
+        this.userTest.observeChanges({
+            added: function (user) {
+                console.log("SOmething got updated :added");
+                this.userDossiers = user;
+            },
+            changed: function (user) {
+                console.log("SOmething got updated :changed");
+                this.userDossiers = user;
+            }
+        });
+        if (title !== '' && description !== '') {
+            //Ajoute le dossier à la db 'dossier'
+            this.dossierService.addDossier(title, description, this.userId);
+        }
+    };
+    DashboardComponent.prototype.deleteDossier = function (dossierId) {
+        this.dossierService.deleteUserDossier(dossierId);
+        this.tacheService.deleteDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateDossiers(this.userId);
+    };
+    DashboardComponent.prototype.dossierToggle = function (dossier) {
+        this.dossierService.updateDossierStatus(dossier._id, !dossier.status);
+        return dossier.status = !dossier.status;
+    };
+    DashboardComponent.prototype.addTacheToDossier = function (tache, dossierId) {
+        if (tache !== '') {
+            this.tacheService.addTache(tache, dossierId);
+            this.userDossiers = this.dossierService.updateDossiers(this.userId);
+            console.log(this.userDossiers);
+        }
+    };
     DashboardComponent.prototype.quickTache = function (tache) {
         if (tache !== '') {
             //Ajoute la tache à la base de données dans 'tache' et rajoute la tache au dossier correspondant (Boite de récéption)
@@ -49,31 +80,13 @@ var DashboardComponent = (function () {
             this.userDossiers = this.dossierService.updateDossiers(this.userId);
         }
     };
-    DashboardComponent.prototype.createDossier = function (title, description) {
-        if (title !== '' && description !== '') {
-            //Ajoute le dossier à la db 'dossier'
-            this.dossierService.addDossier(title, description, this.userId);
-            //Récupère les dossiers correspondant à l'utilisateur et update
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
-    };
-    DashboardComponent.prototype.addTacheToDossier = function (tache, dossierId) {
-        if (tache !== '') {
-            this.tacheService.addTache(tache, dossierId);
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
-    };
-    DashboardComponent.prototype.dossierToggle = function (dossier) {
-        this.dossierService.updateDossierStatus(dossier._id, !dossier.status);
-        return dossier.status = !dossier.status;
+    DashboardComponent.prototype.changeTacheStatus = function (tacheId, dossierId) {
+        this.tacheService.changeStatus(tacheId);
+        this.tacheService.updateDossierTaches(dossierId);
+        this.userDossiers = this.dossierService.updateDossiers(this.userId);
     };
     DashboardComponent.prototype.logout = function () {
         this.authService.logout();
-    };
-    DashboardComponent.prototype.deleteUserDossier = function (dossierId) {
-        this.dossierService.deleteUserDossier(dossierId);
-        this.tacheService.deleteDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
     };
     DashboardComponent = __decorate([
         core_1.Component({

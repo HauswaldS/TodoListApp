@@ -3,6 +3,6 @@ interface Tache {
   dateStart?: Date;
   dateEnd?: Date;
   description: string;
-  status?: string;
+  status: boolean;
   dossierId:string;
 }

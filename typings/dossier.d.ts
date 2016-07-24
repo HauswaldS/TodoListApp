@@ -5,4 +5,5 @@ interface Dossier {
   taches?:Array<Tache>;
   ownerId: string;
   status: boolean;
+  show: string;
 }
