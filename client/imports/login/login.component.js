@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -9,42 +14,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var common_1 = require('@angular/common');
 var router_1 = require('@angular/router');
-var authentification_service_ts_1 = require('../authentification/authentification.service.ts');
-var users_ts_1 = require('../../../collections/users.ts');
+var angular2_meteor_accounts_ui_1 = require('angular2-meteor-accounts-ui');
+var angular2_meteor_1 = require('angular2-meteor');
 var login_component_html_1 = require('./login.component.html');
-var LoginComponent = (function () {
-    function LoginComponent(authService, router) {
-        this.authService = authService;
+var LoginComponent = (function (_super) {
+    __extends(LoginComponent, _super);
+    function LoginComponent(router, ngZone) {
+        _super.call(this);
         this.router = router;
-        var fb = new common_1.FormBuilder();
-        this.loginForm = fb.group({
-            email: ['', common_1.Validators.required],
-            password: ['', common_1.Validators.required]
-        });
-        this.users = users_ts_1.Users.find();
+        this.ngZone = ngZone;
     }
     LoginComponent.prototype.ngOnInit = function () {
-        if (localStorage.getItem('token') !== null) {
-            console.log("GoToDashboard");
-            this.router.navigate(['/dashboard']);
-        }
-    };
-    LoginComponent.prototype.connectUser = function (userInfo) {
-        if (!this.authService.login(userInfo)) {
-            return this.errorMsg = 'Email or Password are incorrect';
-        }
+        // this.subscribe('dossiers', ()=>{
+        //   this.dossiers = Dossiers.find();
+        //   console.log(this.dossiers);
+        // }, true);
     };
     LoginComponent = __decorate([
         core_1.Component({
-            selector: 'login',
+            selector: 'dashboard',
             template: login_component_html_1.default,
-            providers: [authentification_service_ts_1.AuthentificationService]
+            directives: [router_1.ROUTER_DIRECTIVES, angular2_meteor_accounts_ui_1.LoginButtons]
         }), 
-        __metadata('design:paramtypes', [authentification_service_ts_1.AuthentificationService, router_1.Router])
+        __metadata('design:paramtypes', [router_1.Router, core_1.NgZone])
     ], LoginComponent);
     return LoginComponent;
-}());
+}(angular2_meteor_1.MeteorComponent));
 exports.LoginComponent = LoginComponent;
 //# sourceMappingURL=login.component.js.map

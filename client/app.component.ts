@@ -3,9 +3,10 @@ import { bootstrap } from 'angular2-meteor-auto-bootstrap';
 import {Mongo} from 'meteor/mongo';
 import {RouterConfig, provideRouter, ROUTER_DIRECTIVES} from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
-import { LoginComponent } from './imports/login/login.component.ts';
 import { DashboardComponent } from './imports/dashboard/dashboard.component.ts';
-import { ProfilDetailComponent} from './imports/profile/profilDetail.component.ts';
+import { LoginComponent } from './imports/login/login.component.ts';
+import { AuthGuard } from 'angular2-meteor-accounts-ui';
+
 
 
 import template from './app.component.html';
@@ -37,18 +38,13 @@ const routes: RouterConfig = [
         pathMatch: 'full'
     },
     {
-        path: 'login',
+        path:'login',
         component: LoginComponent
     },
     {
         path: 'dashboard',
-        component: DashboardComponent,
-        children: [
-            { path: '', redirectTo: 'ProfilDetailComponent', pathMatch: 'full' },
-            { path:'ProfilDetailComponent', component: ProfilDetailComponent}
-        ]
+        component: DashboardComponent, canActivate: [AuthGuard]
     }
-
 ]
 
 const APP_ROUTER_PROVIDERS = [
@@ -57,4 +53,4 @@ const APP_ROUTER_PROVIDERS = [
 
 //Boot Logic
 
-bootstrap(AppComponent, [APP_ROUTER_PROVIDERS, provide(APP_BASE_HREF, { useValue: '/' })]);
+bootstrap(AppComponent, [APP_ROUTER_PROVIDERS,AuthGuard, provide(APP_BASE_HREF, { useValue: '/' })]);

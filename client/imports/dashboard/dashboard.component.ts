@@ -1,114 +1,41 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { Mongo } from 'meteor/mongo';
-import { AuthentificationService } from '../authentification/authentification.service.ts';
-import { Users } from '../../../collections/users.ts'
 import { Tracker } from 'meteor/tracker';
-import { UserService } from '../user/user.service.ts';
-import { TacheDetailComponent } from '../tache/tacheDetail.component.ts';
-import { TacheService} from '../tache/tache.service.ts';
-import { DossierDetailComponent }  from '../dossier/dossierDetail.component.ts';
-import { DossierService } from '../dossier/dossier.service.ts';
-import { ProfilDetailComponent } from '../profile/profilDetail.component.ts';
+import { LoginButtons } from 'angular2-meteor-accounts-ui';
+import { MeteorComponent} from 'angular2-meteor';
+
 
 import template from './dashboard.component.html';
 
 @Component({
     selector: 'dashboard',
     template,
-    directives: [TacheDetailComponent, DossierDetailComponent, ProfilDetailComponent, ROUTER_DIRECTIVES],
-    providers: [AuthentificationService, TacheService, DossierService, UserService]
+    directives: [ROUTER_DIRECTIVES, LoginButtons]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent extends MeteorComponent {
 
-    userId: string;
-    user: User;
-    userDossiers: Array<Dossier>;
-    userMainDossierId: string;
-    userTest: Mongo.Cursor<User>;
-
+      userId: string;
+    dossiers: Mongo.Cursor<Dossier>;
 
     constructor(
-        private authService: AuthentificationService,
-        private tacheService: TacheService,
-        private dossierService: DossierService,
-        private userService: UserService,
         private router: Router,
         private ngZone: NgZone
     ) {
-        this.userId = localStorage.getItem('token');
-        this.userTest = Users.find({ _id: this.userId });
+        super();
     }
 
     ngOnInit() {
-        this.user = this.userService.getUser(this.userId);
-        if (this.user === undefined) {
-            this.authService.logout();
-        }
-        else {
-            this.userDossiers = this.dossierService.getUserDossierOnInit(this.userId);
-            this.userMainDossierId = this.userDossiers[0]._id;
-        }
+        // this.subscribe('dossiers', ()=>{
+        //   this.dossiers = Dossiers.find();
+        //   console.log(this.dossiers);
+        // }, true);
+
+   Tracker.autorun(() => {
+            this.ngZone.run(() => {
+                this.userId = Meteor.userId();
+                console.log(Meteor.userId());
+            });
+        });
     }
-
-
-    createDossier(title: string, description: string) {
-        this.userTest.observeChanges({
-            added: function(user) {
-                console.log("SOmething got updated :added");
-                this.userDossiers = user;
-            },
-            changed: function(user) {
-                console.log("SOmething got updated :changed");
-                this.userDossiers = user;
-            }
-        })
-        if (title !== '' && description !== '') {
-            //Ajoute le dossier à la db 'dossier'
-            this.dossierService.addDossier(title, description, this.userId);
-            //Récupère les dossiers correspondant à l'utilisateur et update
-        }
-    }
-
-    deleteDossier(dossierId) {
-        this.dossierService.deleteUserDossier(dossierId);
-        this.tacheService.deleteDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
-    }
-
-    dossierToggle(dossier) {
-        this.dossierService.updateDossierStatus(dossier._id, !dossier.status)
-        return dossier.status = !dossier.status;
-    }
-
-    addTacheToDossier(tache, dossierId) {
-        if (tache !== '') {
-            this.tacheService.addTache(tache, dossierId);
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-            console.log(this.userDossiers);
-        }
-    }
-
-    quickTache(tache) {
-        if (tache !== '') {
-            //Ajoute la tache à la base de données dans 'tache' et rajoute la tache au dossier correspondant (Boite de récéption)
-            this.tacheService.addTache(tache, this.userMainDossierId);
-            //Récupère les dossiers correspondant à l'utilisateur
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
-    }
-
-    changeTacheStatus(tacheId, dossierId) {
-        this.tacheService.changeStatus(tacheId);
-        this.tacheService.updateDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
-    }
-
-
-    logout() {
-        this.authService.logout();
-    }
-
-
-
 }

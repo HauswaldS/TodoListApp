@@ -12,9 +12,9 @@ var core_1 = require('@angular/core');
 var angular2_meteor_auto_bootstrap_1 = require('angular2-meteor-auto-bootstrap');
 var router_1 = require('@angular/router');
 var common_1 = require('@angular/common');
-var login_component_ts_1 = require('./imports/login/login.component.ts');
 var dashboard_component_ts_1 = require('./imports/dashboard/dashboard.component.ts');
-var profilDetail_component_ts_1 = require('./imports/profile/profilDetail.component.ts');
+var login_component_ts_1 = require('./imports/login/login.component.ts');
+var angular2_meteor_accounts_ui_1 = require('angular2-meteor-accounts-ui');
 var app_component_html_1 = require('./app.component.html');
 var AppComponent = (function () {
     function AppComponent() {
@@ -46,16 +46,12 @@ var routes = [
     },
     {
         path: 'dashboard',
-        component: dashboard_component_ts_1.DashboardComponent,
-        children: [
-            { path: '', redirectTo: 'ProfilDetailComponent', pathMatch: 'full' },
-            { path: 'ProfilDetailComponent', component: profilDetail_component_ts_1.ProfilDetailComponent }
-        ]
+        component: dashboard_component_ts_1.DashboardComponent, canActivate: [angular2_meteor_accounts_ui_1.AuthGuard]
     }
 ];
 var APP_ROUTER_PROVIDERS = [
     router_1.provideRouter(routes)
 ];
 //Boot Logic
-angular2_meteor_auto_bootstrap_1.bootstrap(AppComponent, [APP_ROUTER_PROVIDERS, core_1.provide(common_1.APP_BASE_HREF, { useValue: '/' })]);
+angular2_meteor_auto_bootstrap_1.bootstrap(AppComponent, [APP_ROUTER_PROVIDERS, angular2_meteor_accounts_ui_1.AuthGuard, core_1.provide(common_1.APP_BASE_HREF, { useValue: '/' })]);
 //# sourceMappingURL=app.component.js.map

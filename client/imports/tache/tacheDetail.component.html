@@ -1,6 +1,0 @@
-<form  #form="ngForm" (submit)="add(form.value)">
-  <label for="description">Description</label>
-  <input type="text" name="description" ngControl="description">
-  <button class="btn btn-default" type="submit" >Add</button>
-</form>
-<p *ngFor="let tache of taches"> {{tache.description}}</p>

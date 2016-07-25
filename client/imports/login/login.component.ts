@@ -1,53 +1,34 @@
-import {
-    Component,
-    OnInit} from '@angular/core';
-import {
-    FormBuilder,
-    ControlGroup,
-    Validators,
-    Control} from '@angular/common';
-import { Router } from '@angular/router';
-import {AuthentificationService} from '../authentification/authentification.service.ts';
-import {Users}from '../../../collections/users.ts';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { Router, ROUTER_DIRECTIVES } from '@angular/router';
+import { Mongo } from 'meteor/mongo';
+import { Tracker } from 'meteor/tracker';
+import { LoginButtons } from 'angular2-meteor-accounts-ui';
+import { MeteorComponent} from 'angular2-meteor';
+
 
 import template from './login.component.html';
 
-
 @Component({
-    selector: 'login',
+    selector: 'dashboard',
     template,
-    providers: [AuthentificationService]
+    directives: [ROUTER_DIRECTIVES, LoginButtons]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends MeteorComponent {
 
-    users: Mongo.Cursor<User>;
-    errorMsg: string;
-    loginForm: ControlGroup;
+    dossiers: Mongo.Cursor<Dossier>;
 
     constructor(
-        private authService: AuthentificationService,
-        private router: Router
+        private router: Router,
+        private ngZone: NgZone
     ) {
-        let fb = new FormBuilder();
-
-        this.loginForm = fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required]
-        });
-        this.users = Users.find();
+        super();
     }
 
-    ngOnInit(){
-        if(localStorage.getItem('token') !== null){
-            console.log("GoToDashboard");
-            this.router.navigate(['/dashboard']);
-        }
-    }
-
-    connectUser(userInfo) {
-        if (!this.authService.login(userInfo)) {
-            return this.errorMsg = 'Email or Password are incorrect';
-        }
+    ngOnInit() {
+        // this.subscribe('dossiers', ()=>{
+        //   this.dossiers = Dossiers.find();
+        //   console.log(this.dossiers);
+        // }, true);
     }
 
 }

@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,94 +15,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
-var authentification_service_ts_1 = require('../authentification/authentification.service.ts');
-var users_ts_1 = require('../../../collections/users.ts');
-var user_service_ts_1 = require('../user/user.service.ts');
-var tacheDetail_component_ts_1 = require('../tache/tacheDetail.component.ts');
-var tache_service_ts_1 = require('../tache/tache.service.ts');
-var dossierDetail_component_ts_1 = require('../dossier/dossierDetail.component.ts');
-var dossier_service_ts_1 = require('../dossier/dossier.service.ts');
-var profilDetail_component_ts_1 = require('../profile/profilDetail.component.ts');
+var tracker_1 = require('meteor/tracker');
+var angular2_meteor_accounts_ui_1 = require('angular2-meteor-accounts-ui');
+var angular2_meteor_1 = require('angular2-meteor');
 var dashboard_component_html_1 = require('./dashboard.component.html');
-var DashboardComponent = (function () {
-    function DashboardComponent(authService, tacheService, dossierService, userService, router, ngZone) {
-        this.authService = authService;
-        this.tacheService = tacheService;
-        this.dossierService = dossierService;
-        this.userService = userService;
+var DashboardComponent = (function (_super) {
+    __extends(DashboardComponent, _super);
+    function DashboardComponent(router, ngZone) {
+        _super.call(this);
         this.router = router;
         this.ngZone = ngZone;
-        this.userId = localStorage.getItem('token');
-        this.userTest = users_ts_1.Users.find({ _id: this.userId });
     }
     DashboardComponent.prototype.ngOnInit = function () {
-        this.user = this.userService.getUser(this.userId);
-        if (this.user === undefined) {
-            this.authService.logout();
-        }
-        else {
-            this.userDossiers = this.dossierService.getUserDossierOnInit(this.userId);
-            this.userMainDossierId = this.userDossiers[0]._id;
-        }
-    };
-    DashboardComponent.prototype.createDossier = function (title, description) {
-        this.userTest.observeChanges({
-            added: function (user) {
-                console.log("SOmething got updated :added");
-                this.userDossiers = user;
-            },
-            changed: function (user) {
-                console.log("SOmething got updated :changed");
-                this.userDossiers = user;
-            }
+        // this.subscribe('dossiers', ()=>{
+        //   this.dossiers = Dossiers.find();
+        //   console.log(this.dossiers);
+        // }, true);
+        var _this = this;
+        tracker_1.Tracker.autorun(function () {
+            _this.ngZone.run(function () {
+                _this.userId = Meteor.userId();
+                console.log(Meteor.userId());
+            });
         });
-        if (title !== '' && description !== '') {
-            //Ajoute le dossier à la db 'dossier'
-            this.dossierService.addDossier(title, description, this.userId);
-        }
-    };
-    DashboardComponent.prototype.deleteDossier = function (dossierId) {
-        this.dossierService.deleteUserDossier(dossierId);
-        this.tacheService.deleteDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
-    };
-    DashboardComponent.prototype.dossierToggle = function (dossier) {
-        this.dossierService.updateDossierStatus(dossier._id, !dossier.status);
-        return dossier.status = !dossier.status;
-    };
-    DashboardComponent.prototype.addTacheToDossier = function (tache, dossierId) {
-        if (tache !== '') {
-            this.tacheService.addTache(tache, dossierId);
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-            console.log(this.userDossiers);
-        }
-    };
-    DashboardComponent.prototype.quickTache = function (tache) {
-        if (tache !== '') {
-            //Ajoute la tache à la base de données dans 'tache' et rajoute la tache au dossier correspondant (Boite de récéption)
-            this.tacheService.addTache(tache, this.userMainDossierId);
-            //Récupère les dossiers correspondant à l'utilisateur
-            this.userDossiers = this.dossierService.updateDossiers(this.userId);
-        }
-    };
-    DashboardComponent.prototype.changeTacheStatus = function (tacheId, dossierId) {
-        this.tacheService.changeStatus(tacheId);
-        this.tacheService.updateDossierTaches(dossierId);
-        this.userDossiers = this.dossierService.updateDossiers(this.userId);
-    };
-    DashboardComponent.prototype.logout = function () {
-        this.authService.logout();
     };
     DashboardComponent = __decorate([
         core_1.Component({
             selector: 'dashboard',
             template: dashboard_component_html_1.default,
-            directives: [tacheDetail_component_ts_1.TacheDetailComponent, dossierDetail_component_ts_1.DossierDetailComponent, profilDetail_component_ts_1.ProfilDetailComponent, router_1.ROUTER_DIRECTIVES],
-            providers: [authentification_service_ts_1.AuthentificationService, tache_service_ts_1.TacheService, dossier_service_ts_1.DossierService, user_service_ts_1.UserService]
+            directives: [router_1.ROUTER_DIRECTIVES, angular2_meteor_accounts_ui_1.LoginButtons]
         }), 
-        __metadata('design:paramtypes', [authentification_service_ts_1.AuthentificationService, tache_service_ts_1.TacheService, dossier_service_ts_1.DossierService, user_service_ts_1.UserService, router_1.Router, core_1.NgZone])
+        __metadata('design:paramtypes', [router_1.Router, core_1.NgZone])
     ], DashboardComponent);
     return DashboardComponent;
-}());
+}(angular2_meteor_1.MeteorComponent));
 exports.DashboardComponent = DashboardComponent;
 //# sourceMappingURL=dashboard.component.js.map
